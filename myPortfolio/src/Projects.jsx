@@ -1,5 +1,5 @@
-
-import React from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 const projects = [
     {
@@ -25,9 +25,10 @@ const projects = [
         image: "/projects/aurastay.png",
         imageAlt: "AuraStay hotel booking homepage",
         live: "https://hotel-management-two-delta.vercel.app/",
-        github:
-            "https://github.com/rohitsisodiya07/Hotel-Management",
+        github: "https://github.com/rohitsisodiya07/Hotel-Management",
         accent: "cyan",
+        borderGlow: "hover:border-cyan-400/50 hover:shadow-[0_0_35px_rgba(34,211,238,0.15)]",
+        badgeBg: "border-cyan-400/30 bg-cyan-400/10 text-cyan-300",
     },
     {
         number: "02",
@@ -52,9 +53,10 @@ const projects = [
         image: "/projects/ai-learning.png",
         imageAlt: "AI Learning Platform study dashboard",
         live: "https://ai-learning-app-kappa-orpin.vercel.app/",
-        github:
-            "https://github.com/rohitsisodiya07/Ai-Learning-App",
+        github: "https://github.com/rohitsisodiya07/Ai-Learning-App",
         accent: "purple",
+        borderGlow: "hover:border-purple-400/50 hover:shadow-[0_0_35px_rgba(168,85,247,0.15)]",
+        badgeBg: "border-purple-400/30 bg-purple-400/10 text-purple-300",
     },
     {
         number: "03",
@@ -64,7 +66,7 @@ const projects = [
         description:
             "A task management application developed during my internship at Regex Software Services, demonstrating full-stack development, REST API integration, and database operations.",
         features: [
-            "Task management interface",
+            "Interactive task dashboard",
             "REST API integration",
             "MongoDB data handling",
         ],
@@ -75,101 +77,102 @@ const projects = [
             "MongoDB",
         ],
         live: "https://task-manager-ecru-two.vercel.app/",
-        github:
-            "https://github.com/rohitsisodiya07/Task_Manager",
-        accent: "green",
+        github: "https://github.com/rohitsisodiya07/Task_Manager",
+        accent: "emerald",
+        borderGlow: "hover:border-emerald-400/50 hover:shadow-[0_0_35px_rgba(52,211,153,0.15)]",
+        badgeBg: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
     },
 ];
 
 const TaskPreview = () => {
-    const tasks = [
-        {
-            title: "Complete project documentation",
-            tag: "High",
-            done: false,
-        },
-        {
-            title: "Design UI for new feature",
-            tag: "Medium",
-            done: false,
-        },
-        {
-            title: "Fix API integration issue",
-            tag: "High",
-            done: true,
-        },
-    ];
+    const [tasks, setTasks] = useState([
+        { id: 1, title: "Complete project documentation", tag: "High", done: false },
+        { id: 2, title: "Design UI for new feature", tag: "Medium", done: false },
+        { id: 3, title: "Fix API integration issue", tag: "High", done: true },
+    ]);
+    const [filter, setFilter] = useState("All");
+
+    const toggleTask = (id) => {
+        setTasks((prev) =>
+            prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
+        );
+    };
+
+    const filteredTasks = tasks.filter((t) => {
+        if (filter === "Pending") return !t.done;
+        if (filter === "Completed") return t.done;
+        return true;
+    });
 
     return (
-        <div className="min-h-[240px] overflow-hidden rounded-xl bg-slate-100 p-4 text-slate-800 sm:p-5">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                <div className="flex items-center gap-2 font-bold">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-sm text-white">
+        <div className="min-h-[250px] select-none rounded-xl bg-slate-900/90 p-4 text-slate-200 border border-white/10 sm:p-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center gap-2 font-bold text-sm text-white">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500 text-xs text-slate-950 font-black">
                         ✓
                     </span>
-                    Task Manager
+                    Task Workspace
                 </div>
-
-                <span className="text-xs text-slate-500">
-                    ⌕　♧　⋮
+                <span className="text-[11px] font-mono text-emerald-400/80 bg-emerald-400/10 px-2 py-0.5 rounded-full">
+                    Interactive
                 </span>
             </div>
 
-            <div className="mt-5 flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between">
                 <div>
-                    <p className="text-xs text-slate-500">
-                        Workspace
-                    </p>
-                    <h4 className="text-xl font-bold">
-                        My Tasks
-                    </h4>
+                    <p className="text-[10px] uppercase tracking-wider text-slate-400">Status Overview</p>
+                    <h4 className="text-base font-bold text-white">Sprint Board</h4>
                 </div>
-
-                <span className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white">
-                    + Add Task
+                <span className="rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2.5 py-1 text-xs font-semibold">
+                    3 Tasks
                 </span>
             </div>
 
-            <div className="mt-4 flex gap-2 text-[10px] font-medium">
-                <span className="rounded-md bg-blue-600 px-3 py-2 text-white">
-                    All
-                </span>
-                <span className="rounded-md border border-slate-200 bg-white px-3 py-2">
-                    Pending
-                </span>
-                <span className="rounded-md border border-slate-200 bg-white px-3 py-2">
-                    Completed
-                </span>
+            {/* Filter Tabs */}
+            <div className="mt-3 flex gap-1.5 text-[11px] font-medium">
+                {["All", "Pending", "Completed"].map((tab) => (
+                    <button
+                        key={tab}
+                        type="button"
+                        onClick={() => setFilter(tab)}
+                        className={`rounded-md px-3 py-1 transition-all ${filter === tab
+                                ? "bg-emerald-500 text-slate-950 font-bold shadow-sm"
+                                : "border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10"
+                            }`}
+                    >
+                        {tab}
+                    </button>
+                ))}
             </div>
 
+            {/* Interactive Tasks List */}
             <div className="mt-3 space-y-2">
-                {tasks.map((task) => (
+                {filteredTasks.map((task) => (
                     <div
-                        key={task.title}
-                        className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-3 shadow-sm"
+                        key={task.id}
+                        onClick={() => toggleTask(task.id)}
+                        className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-2.5 transition-colors hover:border-emerald-400/40 hover:bg-white/[0.07]"
                     >
                         <span
-                            className={`flex h-4 w-4 items-center justify-center rounded border text-[10px] ${task.done
-                                    ? "border-blue-600 bg-blue-600 text-white"
-                                    : "border-slate-300"
+                            className={`flex h-4 w-4 items-center justify-center rounded text-[10px] transition-all ${task.done
+                                    ? "bg-emerald-400 text-slate-950 font-bold shadow-[0_0_8px_rgba(52,211,153,0.5)]"
+                                    : "border border-slate-600 bg-slate-800"
                                 }`}
                         >
                             {task.done ? "✓" : ""}
                         </span>
 
                         <span
-                            className={`flex-1 text-[11px] ${task.done
-                                    ? "text-slate-400 line-through"
-                                    : "text-slate-700"
+                            className={`flex-1 text-[11px] transition-all ${task.done ? "text-slate-500 line-through" : "text-slate-200"
                                 }`}
                         >
                             {task.title}
                         </span>
 
                         <span
-                            className={`rounded px-2 py-1 text-[9px] ${task.tag === "High"
-                                    ? "bg-red-100 text-red-600"
-                                    : "bg-amber-100 text-amber-700"
+                            className={`rounded px-1.5 py-0.5 text-[9px] font-medium ${task.tag === "High"
+                                    ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                                    : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
                                 }`}
                         >
                             {task.tag}
@@ -182,20 +185,51 @@ const TaskPreview = () => {
 };
 
 const Projects = () => {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.18, delayChildren: 0.2 },
+        },
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 35 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { type: "spring", stiffness: 90, damping: 18 },
+        },
+    };
+
     return (
         <section
             id="projects"
             className="relative overflow-hidden bg-[#070b14] px-5 py-24 text-white sm:px-8 lg:px-16"
         >
-            {/* Background glow */}
-            <div className="pointer-events-none absolute -left-40 top-40 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px]" />
-            <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-purple-600/10 blur-[120px]" />
+            {/* Ambient Background Glows */}
+            <motion.div
+                animate={{ scale: [1, 1.25, 1], opacity: [0.12, 0.22, 0.12] }}
+                transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+                className="pointer-events-none absolute -left-40 top-40 h-[450px] w-[450px] rounded-full bg-cyan-500/15 blur-[140px]"
+            />
+            <motion.div
+                animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.2, 0.1] }}
+                transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                className="pointer-events-none absolute -right-40 bottom-10 h-[450px] w-[450px] rounded-full bg-purple-600/15 blur-[140px]"
+            />
 
-            <div className="relative mx-auto max-w-7xl">
-                {/* Section heading */}
-                <div className="mb-14 text-center">
-                    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-400/[0.06] px-4 py-2 text-xs font-medium tracking-[0.2em] text-indigo-200">
-                        <span className="h-2 w-2 rounded-full bg-indigo-400" />
+            <div className="relative mx-auto max-w-7xl z-10">
+                {/* Section Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-16 text-center"
+                >
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/[0.06] px-4 py-1.5 text-xs font-semibold tracking-[0.25em] text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
                         MY WORK
                     </div>
 
@@ -207,125 +241,155 @@ const Projects = () => {
                     </h2>
 
                     <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base">
-                        Turning ideas into real products through code,
-                        creativity, and problem-solving.
+                        Turning ideas into real products through code, creativity, and problem-solving.
                     </p>
-                </div>
+                </motion.div>
 
-                {/* Project cards */}
-                <div className="grid items-stretch gap-6 lg:grid-cols-3">
+                {/* Project Cards Grid */}
+                <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-50px" }}
+                    variants={containerVariants}
+                    className="grid items-stretch gap-7 lg:grid-cols-3"
+                >
                     {projects.map((project) => (
-                        <article
+                        <motion.article
                             key={project.number}
-                            className="group flex flex-col rounded-2xl border border-slate-700/70 bg-[#0b1220]/90 p-3 shadow-xl shadow-black/20 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/50 hover:shadow-cyan-950/30 sm:p-4"
+                            variants={cardVariants}
+                            whileHover={{ y: -8 }}
+                            className={`group relative flex flex-col rounded-3xl border border-white/10 bg-[#0c1222]/85 p-4 sm:p-5 backdrop-blur-xl transition-all duration-300 ${project.borderGlow}`}
                         >
-                            {/* Preview */}
-                            <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[#101827]">
+                            {/* Inner Corner Accent Glow */}
+                            <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full bg-white/[0.03] blur-2xl transition-opacity duration-300 group-hover:bg-cyan-400/10" />
+
+                            {/* Project Preview (Image or Interactive Mock) */}
+                            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#060a12]">
                                 {project.image ? (
-                                    <img
-                                        src={project.image}
-                                        alt={project.imageAlt}
-                                        loading="lazy"
-                                        className="aspect-[4/3] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]"
-                                    />
+                                    <div className="overflow-hidden">
+                                        <img
+                                            src={project.image}
+                                            alt={project.imageAlt}
+                                            loading="lazy"
+                                            className="aspect-[4/3] w-full object-cover object-top transition duration-700 ease-out group-hover:scale-105"
+                                        />
+                                    </div>
                                 ) : (
                                     <TaskPreview />
                                 )}
 
-                                <div className="absolute bottom-3 left-3 rounded-lg border border-white/15 bg-[#08111e]/90 px-3 py-2 text-xs font-medium text-cyan-200 backdrop-blur">
+                                {/* Category Badge */}
+                                <div className={`absolute bottom-3 left-3 rounded-full border px-3 py-1 text-xs font-semibold backdrop-blur-md shadow-sm ${project.badgeBg}`}>
                                     {project.category}
                                 </div>
                             </div>
 
-                            {/* Project information */}
+                            {/* Project Info */}
                             <div className="flex flex-1 flex-col px-1 pb-1 pt-6">
                                 <div className="mb-2 flex items-start justify-between gap-3">
                                     <div>
-                                        <h3 className="text-xl font-bold tracking-tight transition group-hover:text-cyan-300">
+                                        <h3 className="text-xl font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-cyan-300">
                                             {project.title}
                                         </h3>
-
-                                        <p className="mt-1 text-sm font-medium text-cyan-300">
+                                        <p className="mt-1 text-sm font-medium text-cyan-300/90">
                                             {project.subtitle}
                                         </p>
                                     </div>
 
-                                    <span className="mt-1 text-xs font-bold tracking-widest text-slate-500">
+                                    <span className="text-sm font-black font-mono tracking-widest text-slate-600 transition-colors group-hover:text-cyan-400/70">
                                         {project.number}
                                     </span>
                                 </div>
 
-                                <p className="mt-4 text-sm leading-6 text-slate-400">
+                                <p className="mt-3 text-sm leading-6 text-slate-400">
                                     {project.description}
                                 </p>
 
-                                {/* Features */}
+                                {/* Features List */}
                                 <div className="mt-5 space-y-2">
                                     {project.features.map((feature) => (
                                         <div
                                             key={feature}
-                                            className="flex items-center gap-2 text-xs text-slate-300"
+                                            className="flex items-center gap-2.5 text-xs text-slate-300"
                                         >
-                                            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-cyan-400/10 text-cyan-300">
+                                            <span className="flex h-5 w-5 items-center justify-center rounded-md bg-cyan-400/10 text-cyan-300 text-[10px]">
                                                 ✦
                                             </span>
-                                            {feature}
+                                            <span>{feature}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                {/* Technology tags */}
-                                <div className="mt-5 flex flex-wrap gap-2">
-                                    {project.tech.map((tech) => (
+                                {/* Technology Tags */}
+                                <div className="mt-6 flex flex-wrap gap-1.5">
+                                    {project.tech.map((t) => (
                                         <span
-                                            key={tech}
-                                            className="rounded-md border border-slate-700 bg-slate-900/80 px-2.5 py-1.5 text-[11px] text-slate-300"
+                                            key={t}
+                                            className="rounded-lg border border-white/5 bg-[#070b14]/70 px-2.5 py-1 text-[11px] font-medium text-slate-300 transition-colors group-hover:border-white/10"
                                         >
-                                            {tech}
+                                            {t}
                                         </span>
                                     ))}
                                 </div>
 
-                                {/* Buttons */}
-                                <div className="mt-auto flex gap-2 pt-7">
-                                    <a
+                                {/* Action Buttons */}
+                                <div className="mt-auto flex items-center gap-2.5 pt-7">
+                                    <motion.a
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.97 }}
                                         href={project.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-3 py-3 text-sm font-bold text-white transition hover:brightness-110"
+                                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-600 px-3 py-3 text-xs sm:text-sm font-bold text-slate-950 shadow-md transition-all hover:brightness-110"
                                     >
                                         Live Demo
-                                        <span>↗</span>
-                                    </a>
+                                        <span className="text-sm">↗</span>
+                                    </motion.a>
 
-                                    <a
+                                    <motion.a
+                                        whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
+                                        whileTap={{ scale: 0.97 }}
                                         href={project.github}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-600 px-3 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-400/60 hover:text-cyan-300"
+                                        className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-3 py-3 text-xs sm:text-sm font-semibold text-slate-200 transition-all hover:border-cyan-400/50 hover:text-cyan-300"
                                     >
                                         GitHub
-                                        <span>↗</span>
-                                    </a>
+                                        <span className="text-sm">↗</span>
+                                    </motion.a>
                                 </div>
                             </div>
-                        </article>
+                        </motion.article>
                     ))}
-                </div>
+                </motion.div>
 
-                {/* GitHub CTA */}
-                <div className="mt-10 flex justify-center">
-                    <a
+                {/* Bottom CTA */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="mt-14 flex justify-center"
+                >
+                    <motion.a
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         href="https://github.com/rohitsisodiya07"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-3 rounded-full border border-indigo-400/40 bg-indigo-400/[0.05] px-6 py-3 text-sm font-medium text-slate-300 transition hover:border-cyan-400/60 hover:text-white"
+                        className="group inline-flex items-center gap-3 rounded-full border border-cyan-400/30 bg-cyan-400/[0.04] px-7 py-3.5 text-sm font-medium text-slate-300 backdrop-blur-md transition-all duration-300 hover:border-cyan-400/70 hover:bg-cyan-400/10 hover:text-white hover:shadow-[0_0_25px_rgba(34,211,238,0.2)]"
                     >
-                        <span className="text-lg">⌘</span>
+                        <span className="text-base text-cyan-400 transition-transform group-hover:rotate-12">⌘</span>
                         More projects on GitHub
-                        <span className="text-cyan-300">→</span>
-                    </a>
-                </div>
+                        <motion.span
+                            animate={{ x: [0, 4, 0] }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="text-cyan-300"
+                        >
+                            →
+                        </motion.span>
+                    </motion.a>
+                </motion.div>
             </div>
         </section>
     );
