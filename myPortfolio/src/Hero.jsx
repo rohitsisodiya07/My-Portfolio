@@ -129,7 +129,6 @@ const Hero = () => {
                     >
                         Rohit
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-500">
-                            .
                         </span>
                     </motion.h1>
 
